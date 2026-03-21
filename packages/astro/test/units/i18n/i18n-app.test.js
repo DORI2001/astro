@@ -386,6 +386,48 @@ describe('i18n via App - invalid locale with dynamic [locale] route (#15098)', (
 	});
 });
 
+// #16019: Domain i18n root path returns 404 when trailingSlash: "never"
+describe('i18n via App - domain routing with trailingSlash: "never" (#16019)', () => {
+	const i18n = makeI18nConfig({
+		strategy: 'domains-prefix-other-locales',
+		locales: ['fi', 'en'],
+		defaultLocale: 'fi',
+	});
+	i18n.domainLookupTable = { 'https://example.com': 'en' };
+	i18n.domains = { en: 'https://example.com' };
+
+	function createDomainApp() {
+		return createTestApp(
+			[
+				// Static /en route (like src/pages/en/index.astro)
+				createPage(localePage, {
+					route: '/en',
+					segments: [[staticPart('en')]],
+					trailingSlash: 'never',
+				}),
+				// Static / route (like src/pages/index.astro)
+				createPage(localePage, {
+					route: '/',
+					isIndex: true,
+					trailingSlash: 'never',
+				}),
+			],
+			{ i18n, trailingSlash: 'never' },
+		);
+	}
+
+	it('root path on mapped domain matches the locale route, not 404', async () => {
+		const app = createDomainApp();
+		const match = app.match(
+			new Request('https://example.com/', {
+				headers: { 'X-Forwarded-Host': 'example.com', 'X-Forwarded-Proto': 'https' },
+			}),
+		);
+		assert.ok(match, 'Should match a route (was returning undefined/404 before fix)');
+		assert.equal(match.route, '/en');
+	});
+});
+
 // #12385: Domain i18n should resolve locale even with port in Host header
 describe('i18n via App - domain with localhost and ports (#12385)', () => {
 	const i18n = makeI18nConfig({
