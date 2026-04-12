@@ -41,17 +41,17 @@
     "astro": "^6.0.0"
   },
   "devDependencies": {
-    "@fastify/middie": "^9.1.0",
-    "@fastify/static": "^9.0.0",
+    "@fastify/middie": "^9.3.1",
+    "@fastify/static": "^9.1.0",
     "@types/node": "^22.10.6",
     "@types/send": "^1.2.1",
     "@types/server-destroy": "^1.0.4",
     "astro": "workspace:*",
     "astro-scripts": "workspace:*",
     "cheerio": "1.2.0",
-    "devalue": "^5.6.3",
+    "devalue": "^5.7.1",
     "express": "^5.2.1",
-    "fastify": "^5.7.4",
+    "fastify": "^5.8.4",
     "node-mocks-http": "^1.17.2"
   },
   "astro": {
